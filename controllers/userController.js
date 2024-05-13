@@ -8,8 +8,9 @@ const getAllUsers = async (req, res, next) => {
   try {
     //get users from database
     const users = await User.findAll();
-    if (users) {
-      //if users are found send them as response
+    if (users === 0) {
+      res.status(404).json({ message: "No users found" });
+    } else {
       res.status(200).json(users);
     }
   } catch (error) {
@@ -59,7 +60,7 @@ const getAllShowsWatchedByUser = async (req, res, next) => {
     const shows = await user.getShows();
 
     if (!shows) {
-      return res.status(404).json({ message: "Show not found" });
+      return res.status(404).json({ message: "Shows not found" });
     } else {
       res.status(200).json(shows);
     }
