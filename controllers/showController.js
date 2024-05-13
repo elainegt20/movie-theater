@@ -161,6 +161,48 @@ const deleteShow = async (req, res, next) => {
   }
 };
 
+//server validation
+
+const validateShowStatus = async (req, res, next) => {
+  const status = req.body.status;
+
+  //validate status
+  if (!status) {
+    return res.status(400).json({ message: "Status field is required." });
+  }
+
+  // Check for empty or whitespace-only strings
+  if (!status.trim()) {
+    return res
+      .status(400)
+      .json({ message: "Status cannot be empty or just whitespace." });
+  }
+
+  // Check for length
+  if (status.length < 5 || status.length > 25) {
+    return res
+      .status(400)
+      .json({ message: "Status must be between 5 and 25 characters long." });
+  }
+
+  next(); // Pass control to the next handler if validation is successful
+};
+
+// Validate rating
+
+const validateShowRating = async (req, res, next) => {
+  const rating = req.body.rating;
+
+  if (rating !== undefined) {
+    if (typeof rating !== "number" || rating % 1 !== 0) {
+      return res.status(400).json({ message: "Rating must be an integer." });
+    }
+  } else {
+    return res.status(400).json({ message: "Rating must be provided." });
+  }
+  next();
+};
+
 module.exports = {
   getAllShows,
   getOneShow,
@@ -168,4 +210,6 @@ module.exports = {
   updateRating,
   updateStatus,
   deleteShow,
+  validateShowStatus,
+  validateShowRating,
 };
