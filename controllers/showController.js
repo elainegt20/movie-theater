@@ -185,14 +185,6 @@ const validateShowStatus = async (req, res, next) => {
       .json({ message: "Status must be between 5 and 25 characters long." });
   }
 
-  // Validate rating
-  if (rating !== undefined) {
-    // Only validate rating if provided
-    if (typeof rating !== "number" || rating % 1 !== 0) {
-      return res.status(400).json({ message: "Rating must be an integer." });
-    }
-  }
-
   next(); // Pass control to the next handler if validation is successful
 };
 
@@ -200,14 +192,15 @@ const validateShowStatus = async (req, res, next) => {
 
 const validateShowRating = async (req, res, next) => {
   const rating = req.body.rating;
+
   if (rating !== undefined) {
-    // Only validate rating if provided
     if (typeof rating !== "number" || rating % 1 !== 0) {
       return res.status(400).json({ message: "Rating must be an integer." });
     }
   } else {
     return res.status(400).json({ message: "Rating must be provided." });
   }
+  next();
 };
 
 module.exports = {
